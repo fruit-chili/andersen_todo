@@ -1,0 +1,7 @@
+config/
+data/
+andersen_todo/static/
+socket/
+docker-compose.yml
+Dockerfile
+andersen_todo/wait-for-it.sh

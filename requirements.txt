@@ -1,2 +1,5 @@
 Django==4.2.4
 djangorestframework==3.15.2
+uwsgi
+psycopg
+djangorestframework-simplejwt
