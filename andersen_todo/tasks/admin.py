@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Task
+
+
+@admin.register(Task)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ['user_id', 'title', 'description', 'status']

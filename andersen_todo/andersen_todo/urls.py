@@ -16,7 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from tasks.views import TasksView, Registration, TaskView, CompleteTaskView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('paniniminimoneymore/', admin.site.urls),
+    path('registration/', Registration.as_view(), name='registration'), #POST
+    path('login/', TokenObtainPairView.as_view(), name='login'), #POST
+    path('tasks/', TasksView.as_view(), name='tasks_list'), #GET, POST 
+    # path('tasks/<str:username>/', tasks.xxx.as_view(), name='user_tasks_list'), #GET
+    path('task/<int:task_id>/', TaskView.as_view(), name='task_details'), #GET, PATCH, DELETE
+    path('task/<int:task_id>/completed/', CompleteTaskView.as_view(), name='mark_task_completed'), #PATCH
 ]
