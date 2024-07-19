@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from rest_framework import status, permissions
 from rest_framework.pagination import PageNumberPagination
@@ -10,15 +11,9 @@ from rest_framework.views import APIView
 from tasks.models import Task
 from tasks.serializers import TaskSerializer
 
-def is_owner(user, task):
-    if task.user_id == user:
-        return True
-    else: 
-        return False
 
 class Registration(APIView):
     permission_classes = [permissions.AllowAny]
-    queryset = User.objects.all()
     def post(self, request):
         required_fields = ('first_name', 'username', 'password')
         missed_fields = []
@@ -47,23 +42,67 @@ class Registration(APIView):
         return Response(f'User successfully created!', 
                         status=status.HTTP_201_CREATED)        
 
+
 class TasksView(APIView):
-    # permission_classes = [permissions.IsAuthenticated] #УБРАТЬ пере релизом
-    qs = Task.objects.all()
-    serializer = TaskSerializer(qs, many=True)
     def get(self, request):
-        # serializer = self.serializer
-        return Response(self.serializer.data, status=status.HTTP_200_OK)
+        qs = Task.objects.all()
+        task_status = request.query_params.get('status')
+        if task_status is not None:
+            qs = qs.filter(status=task_status)        
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(qs, request)
+        serializer = TaskSerializer(result_page, many=True,
+                                            context={"request": request})
+        return paginator.get_paginated_response(serializer.data)
+    def post(self, request):
+        data = request.data.copy()
+        data['user_id'] = request.user.id
+        serializer = TaskSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('The task status was successfully created', 
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, 
+                                status=status.HTTP_400_BAD_REQUEST)
+            
+
+class OwnTasksView(APIView):
+    def get(self, request):
+        qs = Task.objects.filter(user_id=request.user.id)
+        task_status = request.query_params.get('status')
+        if task_status is not None:
+            qs = qs.filter(status=task_status)
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(qs, request)
+        serializer = TaskSerializer(result_page, many=True,
+                                            context={"request": request})        
+        return paginator.get_paginated_response(serializer.data)
+    
+class UserTasksView(APIView):
+    def get(self, request, user_id):
+        qs = Task.objects.filter(user_id=user_id)
+        task_status = request.query_params.get('status')
+        if task_status is not None:
+            qs = qs.filter(status=task_status)        
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(qs, request)
+        serializer = TaskSerializer(result_page, many=True,
+                                            context={"request": request})        
+        return paginator.get_paginated_response(serializer.data)
+
     
 class TaskView(APIView):
-    # permission_classes = [permissions.AllowAny] #УБРАТЬ пере релизом
     def get(self, request, task_id):
         task = get_object_or_404(Task, pk=task_id)
         serializer = TaskSerializer(task, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
     def patch(self, request, task_id):
         task = get_object_or_404(Task, pk=task_id)
-        if is_owner(request.user, task):
+        if request.user == task.user_id:
             serializer = TaskSerializer(instance=task, 
                                     data=request.data, 
                                     partial=True)
@@ -79,7 +118,7 @@ class TaskView(APIView):
             status=status.HTTP_403_FORBIDDEN)
     def delete(self, request, task_id):
         task = get_object_or_404(Task, pk=task_id)
-        if is_owner(request.user, task):
+        if request.user == task.user_id:
             task.delete()
             return Response('The task status was successfully deleted', 
                                 status=status.HTTP_200_OK)
@@ -87,27 +126,18 @@ class TaskView(APIView):
             return Response("You can delete only own tasks", 
             status=status.HTTP_403_FORBIDDEN)        
 
-class TasksView(APIView):
-    qs = Task.objects.all()
-    serializer = TaskSerializer(qs, many=True)
-    def get(self, request):
-        return Response(self.serializer.data, status=status.HTTP_200_OK)
-    def post(self, request):
-        pass
-        # return Response('The task status was successfully created', 
-        #                 status=status.HTTP_201_CREATED)
     
-class CompleteTaskView(APIView):
+class MarkTaskCompletedView(APIView):
     def patch(self, request, task_id):
         task = get_object_or_404(Task, pk=task_id)
-        if is_owner(request.user, task):
+        if request.user == task.user_id:
             data = {'status': 'Completed'}
             serializer = TaskSerializer(instance=task, 
-                                    data=data, 
-                                    partial=True)
+                                        data=data, 
+                                        partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response('The task status was successfully set as Completed', 
+                return Response('The task status was successfully marked as Completed', 
                                 status=status.HTTP_200_OK)
             else:
                 return Response(data=serializer.errors, 
