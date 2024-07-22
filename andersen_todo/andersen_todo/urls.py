@@ -15,18 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from tasks.views import TasksView, Registration, TaskView, MarkTaskCompletedView, UserTasksView, OwnTasksView
+from tasks.views import TasksView, Registration, TaskView, MarkTaskCompletedView, \
+    UserTasksView, OwnTasksView
 
 urlpatterns = [
     path('paniniminimoneymore/', admin.site.urls),
     path('registration/', Registration.as_view(), name='registration'), #POST
     path('login/', TokenObtainPairView.as_view(), name='login'), #POST
-    path('tasks/', TasksView.as_view(), name='tasks_list'), #GET, POST 
-    path('tasks/own/', OwnTasksView.as_view(), name='tasks_list'), #GET, POST 
-    path('tasks/users/<int:user_id>/', UserTasksView.as_view(), name='tasks_list'), #GET, POST 
+    path('tasks/', TasksView.as_view(), name='all_tasks'), #GET, POST 
+    path('tasks/own/', OwnTasksView.as_view(), name='own_tasks'), #GET, POST 
+    path('tasks/users/<int:user_id>/', UserTasksView.as_view(), name='user_tasks'), #GET, POST 
     path('tasks/<int:task_id>/', TaskView.as_view(), name='task_details'), #GET, PATCH, DELETE
-    path('tasks/<int:task_id>/completed/', MarkTaskCompletedView.as_view(), name='mark_task_completed'), #PATCH
+    path('tasks/<int:task_id>/mark-completed/', MarkTaskCompletedView.as_view(), name='mark_task_completed'), #PATCH
 ]
