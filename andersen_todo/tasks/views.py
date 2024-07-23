@@ -65,7 +65,7 @@ class TasksView(TaskListView):
         serializer = TaskSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response('The task status was successfully created', 
+            return Response('The task was successfully created', 
                             status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, 

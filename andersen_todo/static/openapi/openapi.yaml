@@ -62,10 +62,6 @@ paths:
         Copy 'access'-value from current requests's response and click 
         AUTHORIZE button (placed next to servers list)**.</br>
         [Postman collection]: authorization headers automatically added.</br>
-        Credential samples (user - password):
-        * test1 - test1password
-        * test2 - test2password
-        * test3 - test3password
       operationId: login
       requestBody:
         content:
@@ -83,7 +79,7 @@ paths:
       tags:
         - tasks
       summary: Returns all tasks list
-      description: Pagination and filtration by status available
+      description: Pagination and filtration by status are available
       operationId: get_all_tasks
       parameters:
         - $ref: '#/components/parameters/status'
@@ -136,6 +132,8 @@ paths:
       operationId: get_user_tasks
       parameters:
         - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/page'
       responses:
         200: 
           description: Successful operation
@@ -148,7 +146,7 @@ paths:
     get:
       tags:
         - tasks
-      summary: Returns a commets for user profile.
+      summary: Returns a task details.
       operationId: task_details
       parameters:
         - $ref: '#/components/parameters/taskId'
@@ -163,7 +161,7 @@ paths:
       tags:
         - tasks
       summary: Updates task information.
-      description: Can be updated only by owner.
+      description: Can be perform only by owner.
       operationId: patch_task
       parameters:
         - $ref: '#/components/parameters/taskId'      
@@ -186,7 +184,7 @@ paths:
       tags:
         - tasks
       summary: Deletes task.
-      description: Can be deleted only by owner.
+      description: Can be perform only by owner.
       operationId: delete_task
       parameters:
         - $ref: '#/components/parameters/taskId'      
@@ -228,17 +226,21 @@ components:
           type: string
           description: Users' first name
           maxLength: 150
+          example: John
         username:
           type: string
           description: 150 characters or fewer. Letters, digits and @/./+/-/_ only.
           maxLength: 150
+          example: JohnDoe
         password:
           type: string
           description: Password (min 6 symbols)
+          example: 123qwerty
         last_name:
           type: string
           description: (optional) Users' last name
           maxLength: 150      
+          example: Doe
     
     Login:
       type: object
@@ -246,8 +248,10 @@ components:
       properties:
         username:
           type: string
+          example: JohnDoe
         password:
           type: string
+          example: 123qwerty
 
     CreateTask:
       title: CreateTask
@@ -282,10 +286,12 @@ components:
           type: string
           description: Task title
           maxLength: 64
+          example: New title
         description:
           type: string
           description: Task description
           maxLength: 1024
+          example: Some new description
         status:
           type: string
           description: Task status
