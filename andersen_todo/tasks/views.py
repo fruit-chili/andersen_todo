@@ -1,7 +1,5 @@
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
-from django.conf import settings
-
+from django.shortcuts import get_object_or_404
 from rest_framework import status, permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.reverse import reverse
@@ -123,7 +121,7 @@ class MarkTaskCompletedView(APIView):
                                         partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response('The task status was successfully marked as Completed', 
+                return Response('The task status was successfully marked as Completed',
                                 status=status.HTTP_200_OK)
             else:
                 return Response(data=serializer.errors, 
@@ -131,3 +129,10 @@ class MarkTaskCompletedView(APIView):
         else:
             return Response("You can modify only own tasks", 
             status=status.HTTP_403_FORBIDDEN)
+
+class _KillTestUsersView(APIView):
+    def post(self, request):
+        if request.user.username == 'TestUser':
+            test_users = User.objects.filter(username__startswith='TestUser')
+            for user in test_users:
+                user.delete()
