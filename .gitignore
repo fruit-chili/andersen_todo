@@ -1,7 +1,8 @@
 .venv/
 config/
 data/
-andersen_todo/static/
+andersen_todo/static/admin/
+andersen_todo/static/rest_framework/
 socket/
 docker-compose.yml
 Dockerfile
