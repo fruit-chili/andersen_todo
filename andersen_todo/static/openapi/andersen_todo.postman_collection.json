@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "61c841e5-09ad-4f16-bb91-de2447831ad6",
 		"name": "Andersen_todo",
-		"description": "Simple RESTful application for managing a task list (ToDo list) based on Django (DRF) and PostreSQL. Made as Python technical task for Andersen.\n\n  \nThere are three options for API testing available:\n\n1. \\[Swagger-ui\\]: [http://localhost/openapi](http://localhost/openapi)\n    \n2. \\[Postman collection\\]: [http://localhost/static/openapi/andersen_todo.postman_collection.json](http://localhost/static/openapi/andersen_todo.postman_collection.json)\n    \n3. \\[/andersen_todo/tasks/\\] run: 'pytest tests.py'  \n    \n\n\\[GitHub\\]([https://github.com/fruit-chili/andersen_todo)](https://github.com/fruit-chili/andersen_todo)EndFragment)",
+		"description": "Simple RESTful application for managing a task list (ToDo list) based on Django (DRF) and PostreSQL. Made as Python technical task for Andersen.\n\nThere are three options for API testing available:\n\n1. \\[Swagger-ui\\]: [http://localhost/openapi](http://localhost/openapi)\n    \n2. \\[Postman collection\\]: [http://localhost/static/openapi/andersen_todo.postman_collection.json](http://localhost/static/openapi/andersen_todo.postman_collection.json)\n    \n3. \\[/andersen_todo/tasks/\\]run: 'python -m pytest tests.py' (requires python with pytest, requests)  \n    \n\n\\[GitHub\\]([https://github.com/fruit-chili/andersen_todo)](https://github.com/fruit-chili/andersen_todo)EndFragment)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29660216"
 	},

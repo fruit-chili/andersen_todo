@@ -1,0 +1,34 @@
+services:
+  nginx:
+    image: nginx:1.25.3
+    restart: always
+    volumes:
+      - ./config/nginx:/etc/nginx/templates
+      - .:/code
+    ports:
+      - "80:80"
+
+  db:
+    image: postgres:15.2
+    container_name: pgdb_todo
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=superqwertypassword
+
+  web:
+    build: .
+    container_name: web_todo
+    command: ["./wait-for-it.sh", "db:5432", "--", 
+      "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini"]
+    restart: always
+    volumes: 
+      - .:/code
+    environment:
+      - DJANGO_SETTINGS_MODULE=andersen_todo.settings
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=superqwertypassword
+    depends_on:
+      - db

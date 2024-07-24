@@ -1,9 +1,5 @@
 .venv/
-config/
 data/
 andersen_todo/static/admin/
 andersen_todo/static/rest_framework/
-socket/
-docker-compose.yml
-Dockerfile
-andersen_todo/wait-for-it.sh
+socket/uwsgi_app.sock

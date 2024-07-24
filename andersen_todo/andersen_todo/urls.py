@@ -31,7 +31,7 @@ urlpatterns = [
     path('tasks/<int:task_id>/', TaskView.as_view(), name='task_details'), #GET,PATCH,DELETE
     path('tasks/<int:task_id>/mark-completed/', MarkTaskCompletedView.as_view(), 
          name='mark_task_completed'), #PATCH
-    path('paniniminimoneymore/', admin.site.urls), 
+    path('admin/', admin.site.urls), 
     path('openapi/', TemplateView.as_view(template_name="index.html"), name='openapi'),
     path('_killtestusers/', _KillTestUsersView.as_view()),
 ]

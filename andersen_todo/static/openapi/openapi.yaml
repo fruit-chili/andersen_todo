@@ -9,7 +9,7 @@ info:
     There are three options for API testing available:
     * [Swagger-ui](http://localhost/openapi)
     * [Postman collection](http://localhost/static/openapi/andersen_todo.postman_collection.json)<br>
-    * run: 'pytest tests.py' (/andersen_todo/tasks/)
+    * [/andersen_todo/tasks/]run: 'python -m pytest tests.py' (requires python with pytest, requests)
 
     [GitHub](https://github.com/fruit-chili/andersen_todo)
 
