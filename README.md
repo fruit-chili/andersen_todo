@@ -1,3 +1,6 @@
 # andersen_todo
 ToDo list (Andersen tech task)
-1111
+
+docker compose up
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py collectstatic

@@ -1,5 +1,5 @@
 .venv/
 data/
+socket/uwsgi_app.sock
 andersen_todo/static/admin/
 andersen_todo/static/rest_framework/
-socket/uwsgi_app.sock
